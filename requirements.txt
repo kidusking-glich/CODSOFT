@@ -1,0 +1,5 @@
+customtkinter==5.2.2
+darkdetect==0.8.0
+packaging==26.0
+pyperclip==1.11.0
+sv_ttk==2.6.1
