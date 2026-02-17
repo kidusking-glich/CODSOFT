@@ -29,9 +29,113 @@ def apply_theme():
     else:
         return """
         <style>
-        .stContainer {border: 1px solid #e0e0e0 !important; border-radius: 8px !important;}
-        .stFormSubmitButton > button[kind="secondary"] {background-color: #4a9eff !important; color: white !important; border: none !important;}
-        .empty-state {color: #666 !important;}
+        /* Main App Background - Clean Light Theme */
+        .stApp {
+            background-color: #f8f9fa !important;
+        }
+        
+        /* Clean containers */
+        .stContainer {
+            background: white !important;
+            border: 1px solid #e9ecef !important;
+            border-radius: 8px !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+        }
+        
+        /* Professional buttons */
+        .stButton > button {
+            background-color: #4a6fa5 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 6px !important;
+            font-weight: 500 !important;
+        }
+        .stButton > button:hover {
+            background-color: #3d5a80 !important;
+        }
+        
+        /* Form submit button */
+        .stFormSubmitButton > button {
+            background-color: #4a6fa5 !important;
+            color: white !important;
+            border: none !important;
+        }
+        
+        /* Metric cards */
+        div[data-testid="stMetric"] {
+            background-color: white !important;
+            border: 1px solid #e9ecef !important;
+            border-radius: 8px !important;
+            padding: 15px !important;
+        }
+        div[data-testid="stMetricLabel"] {color: #6c757d !important;}
+        div[data-testid="stMetricValue"] {color: #212529 !important;}
+        
+        /* Expander styling */
+        .streamlit-expanderHeader {
+            background-color: #e9ecef !important;
+            color: #212529 !important;
+            border-radius: 6px !important;
+            font-weight: 500 !important;
+        }
+        
+        /* Clean dividers */
+        hr {
+            border: none !important;
+            height: 1px !important;
+            background-color: #e9ecef !important;
+        }
+        
+        /* Contact card */
+        .contact-card {
+            border-left: 4px solid #4a6fa5 !important;
+            background: white !important;
+            border-radius: 6px !important;
+            padding: 12px !important;
+            margin-bottom: 8px !important;
+        }
+        
+        /* Success/error messages */
+        .stSuccess {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+            border-radius: 6px !important;
+        }
+        .stError {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+            border-radius: 6px !important;
+        }
+        
+        /* Input field styling */
+        .stTextInput input, .stTextArea textarea {
+            border-radius: 6px !important;
+            border: 1px solid #ced4da !important;
+        }
+        .stTextInput input:focus, .stTextArea textarea:focus {
+            border-color: #4a6fa5 !important;
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2) !important;
+        }
+        
+        /* Download button */
+        .stDownloadButton > button {
+            background-color: #4a6fa5 !important;
+            color: white !important;
+            border: none !important;
+        }
+        
+        /* Empty state */
+        .empty-state {color: #6c757d !important;}
+        
+        /* Title styling */
+        h1, h2, h3 {
+            color: #212529 !important;
+        }
+        
+        /* Search input */
+        .stTextInput input {
+            border-radius: 20px !important;
+        }
         </style>
         """
 

@@ -11,16 +11,19 @@ st.set_page_config(page_title="Advanced Contact Book", layout="centered")
 st.markdown(apply_theme(), unsafe_allow_html=True)
 
 # ---- Header ----
-st.title("📝 Contact Book | CodSoft Internship")
-st.subheader("Manage your contacts efficiently")
+st.markdown("""
+<div style="text-align: center; padding: 20px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+    <h1 style="color: white !important; margin: 0; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">📝 Contact Book</h1>
+    <p style="color: rgba(255,255,255,0.9) !important; margin: 10px 0 0 0; font-size: 1.2em;">✨ CodSoft Internship Project</p>
+</div>
+""", unsafe_allow_html=True)
 
 # ---- Theme Toggle ----
 col1, col2 = st.columns([1, 5])
 with col1:
-    if st.button("🌙" if st.session_state.theme == "light" else "☀️"):
+    if st.button("🌙" if st.session_state.theme == "light" else "☀️", help="Toggle Theme"):
         toggle_theme()
 
-st.markdown("---")
 
 # ---- Add New Contact Form ----
 with st.expander("➕ Add New Contact", expanded=False):
