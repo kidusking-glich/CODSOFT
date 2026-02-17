@@ -5,8 +5,13 @@ import uuid
 DB_NAME = "contact.db"
 
 
+# def connect_db():
+#     return sqlite3.connect(DB_NAME) 
+
 def connect_db():
-    return sqlite3.connect(DB_NAME) 
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 def initialize_db():
@@ -58,7 +63,7 @@ def get_contacts(order_by="created_at DESC"):
     conn = connect_db()
     cursor = conn.cursor()
 
-    query = f"SELECT * FROM contacts ORDER BY{order_by}"
+    query = f"SELECT * FROM contacts ORDER BY {order_by}"
     cursor.execute(query)
     rows = cursor.fetchall()
 
