@@ -74,7 +74,7 @@ def delete_contact(contact_id):
     conn = connect_db()
     cursor = conn.cursor()
 
-    cursor.execute("DELETE FROM contact WHERE id = ?", (contact_id,))
+    cursor.execute("DELETE FROM contacts WHERE id = ?", (contact_id,))
     conn.commit()
     conn.close()
 
