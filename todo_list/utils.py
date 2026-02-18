@@ -46,7 +46,8 @@ def get_empty_state_color():
 # ============================================
 # DATA MANAGEMENT
 # ============================================
-FILE_PATH = "todo.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FILE_PATH = os.path.join(BASE_DIR, "todo.json")
 
 def load_data():
     if os.path.exists(FILE_PATH):
@@ -84,6 +85,11 @@ def update_task_status(tasks, task_id, is_completed):
     return tasks
 
 def delete_task(tasks, task_id):
+    # Clean up session state keys related to this task
+    if 'task_status_' + task_id in st.session_state:
+        del st.session_state['task_status_' + task_id]
+    if 'confirm_delete_' + task_id in st.session_state:
+        del st.session_state['confirm_delete_' + task_id]
     return [t for t in tasks if t['id'] != task_id]
 
 def edit_task(tasks, task_id, new_title, new_date):
@@ -137,12 +143,22 @@ def get_stats(tasks):
 # ============================================
 # UI COMPONENTS
 # ============================================
-def render_task_card(task, original_index):
+def render_task_card(task):
     with st.container(border=True):
         col1, col2, col3, col4, col5 = st.columns([0.08, 0.40, 0.25, 0.12, 0.15])
         
-        # Checkbox
-        is_done = col1.checkbox("Done", value=task["isCompleted"], key=f"check_{task['id']}", label_visibility="collapsed")
+        # Get current task status from session state
+        task_status_key = f"task_status_{task['id']}"
+        if task_status_key not in st.session_state:
+            st.session_state[task_status_key] = task["isCompleted"]
+        
+        # Checkbox - use session state value
+        is_done = col1.checkbox("Done", value=st.session_state[task_status_key], key=f"check_{task['id']}", label_visibility="collapsed")
+        
+        # Update session state if checkbox changed
+        if is_done != st.session_state[task_status_key]:
+            st.session_state[task_status_key] = is_done
+            st.session_state.pending_update = (task['id'], is_done)
         
         # Title
         col2.markdown(f"**{task['title']}**")
@@ -180,12 +196,12 @@ def render_task_card(task, original_index):
             col5.markdown("❓ **Confirm?**")
             col5a, col5b = col5.columns(2)
             if col5a.button("✅", key=f"yes_{task['id']}", use_container_width=True):
-                return "delete", task['id']
+                st.session_state.pending_delete = task['id']
+                st.session_state[delete_key] = False
+                st.rerun()
             if col5b.button("❌", key=f"no_{task['id']}", use_container_width=True):
                 st.session_state[delete_key] = False
                 st.rerun()
-        
-        return "update", is_done, task['id']
 
 def render_empty_state(message):
     color = get_empty_state_color()

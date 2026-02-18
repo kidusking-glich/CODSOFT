@@ -29,6 +29,26 @@ st.markdown("---")
 if "tasks" not in st.session_state:
     st.session_state.tasks = load_data()
 
+# Handle pending delete BEFORE rendering tasks
+if "pending_delete" in st.session_state:
+    task_id_to_delete = st.session_state.pending_delete
+    st.session_state.tasks = delete_task(st.session_state.tasks, task_id_to_delete)
+    save_data(st.session_state.tasks)
+    del st.session_state.pending_delete
+    st.toast("Task deleted successfully")
+    st.rerun()
+
+# Handle pending update BEFORE rendering tasks
+if "pending_update" in st.session_state:
+    task_id, is_done = st.session_state.pending_update
+    st.session_state.tasks = update_task_status(st.session_state.tasks, task_id, is_done)
+    save_data(st.session_state.tasks)
+    # Update the session state for this task to reflect the new status immediately
+    st.session_state[f"task_status_{task_id}"] = is_done
+    del st.session_state.pending_update
+    st.toast("Task updated successfully")
+    st.rerun()
+
 tasks = st.session_state.tasks
 
 # ============================================
@@ -47,9 +67,10 @@ with st.form("new_task", clear_on_submit=True):
         submit = st.form_submit_button("➕ Add Task", use_container_width=True)
     
     if submit and title:
-        tasks = add_task(tasks, title, date)
-        save_data(tasks)
+        st.session_state.tasks = add_task(st.session_state.tasks, title, date)
+        save_data(st.session_state.tasks)
         st.success("✅ Task added!")
+        st.toast("Task added successfully")
         st.rerun()
     elif submit and not title:
         st.warning("⚠️ Please enter a task title!")
@@ -84,19 +105,7 @@ if len(filtered_tasks) == 0:
         render_empty_state("🎉 No tasks yet. Add your first task above!")
 else:
     for task in filtered_tasks:
-        original_index = next(j for j, t in enumerate(tasks) if t['id'] == task['id'])
-        result = render_task_card(task, original_index)
-        
-        if result[0] == "delete":
-            tasks = delete_task(tasks, result[1])
-            save_data(tasks)
-            st.rerun()
-        elif result[0] == "update":
-            _, is_done, task_id = result
-            if is_done != task["isCompleted"]:
-                tasks = update_task_status(tasks, task_id, is_done)
-                save_data(tasks)
-                st.rerun()
+        render_task_card(task)
 
 # ============================================
 # EDIT TASK MODAL
@@ -118,10 +127,11 @@ if "edit_task_id" in st.session_state:
             cancel_edit = st.form_submit_button("❌ Cancel")
         
         if save_edit and edit_title:
-            tasks = edit_task(tasks, st.session_state.edit_task_id, edit_title, edit_date)
-            save_data(tasks)
+            st.session_state.tasks = edit_task(st.session_state.tasks, st.session_state.edit_task_id, edit_title, edit_date)
+            save_data(st.session_state.tasks)
             del st.session_state.edit_task_id
             st.success("✅ Task updated!")
+            st.toast("Task updated successfully")
             st.rerun()
         
         if cancel_edit:
@@ -132,7 +142,7 @@ if "edit_task_id" in st.session_state:
 # STATS & PROGRESS
 # ============================================
 st.markdown("---")
-stats = get_stats(tasks)
+stats = get_stats(st.session_state.tasks)
 
 if stats["total"] > 0:
     progress = stats["completed"] / stats["total"]

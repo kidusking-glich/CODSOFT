@@ -1,2 +1,2 @@
-# Main entry point - run with: streamlit run todo_list/todo.py
-from app import *
+# This file redirects to app.py
+# Main entry point - run with: streamlit run app.py
